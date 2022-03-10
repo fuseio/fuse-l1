@@ -72,10 +72,10 @@ create-tx:
 
 # auto-recompile [install inotify-tools before]
 watch-compile:
-	fswatch -m poll_monitor -or ./src | xargs -I{} sh -c "clear && dapp --use solc:$(SOLC_VERSION) build"
+	fswatch -m poll_monitor -or ./src | xargs -I{} sh -c "clear && dapp build"
 
 watch-test:
-	fswatch -m poll_monitor -or ./src | xargs -I{} sh -c "clear && dapp --use solc:$(SOLC_VERSION) test -v"
+	fswatch -m poll_monitor -or ./src | xargs -I{} sh -c "clear && dapp test -v"
 
 optimze:
 	DAPP_STANDARD_JSON="config.json" \

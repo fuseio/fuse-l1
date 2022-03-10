@@ -3,7 +3,7 @@ pragma solidity ^0.8.12;
 
 import "ds-test/test.sol";
 
-import "./FuseL2.sol";
+import "../FuseL2.sol";
 
 contract FuseL2Test is DSTest {
     FuseL2 l;
