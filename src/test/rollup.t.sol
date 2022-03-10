@@ -3,13 +3,13 @@ pragma solidity ^0.8.12;
 
 import "ds-test/test.sol";
 
-import "../FuseL2.sol";
+import "../rollup.sol";
 
-contract FuseL2Test is DSTest {
-    FuseL2 l;
+contract RollupTest is DSTest {
+    Rollup r;
 
     function setUp() public {
-        l = new FuseL2();
+        r = new Rollup();
     }
 
     function testFail_basic_sanity() public {
