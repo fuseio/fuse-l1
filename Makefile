@@ -13,7 +13,7 @@ SOLC_VERSION=0_8_12
 solc:; nix-env -f https://github.com/dapphub/dapptools/archive/master.tar.gz -iA solc-static-versions.solc_${SOLC_VERSION}
 
 # Build & Test
-all    		:; dapp  build
+all    		:; dapp build
 clean  		:; dapp clean && rm -rf ./tmp/*
 test   		:; dapp test -v
 fuzz   		:; dapp test --fuzz-runs 100
