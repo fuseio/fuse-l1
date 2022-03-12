@@ -57,7 +57,7 @@ cat >"$ADDRESSES_FILE" <<EOF
 EOF
 
 # generate go binding for all ABIs in the output json
-generate() {
+get_abi() {
 	NAME=$1
 
 	# find file path
@@ -67,15 +67,8 @@ generate() {
 	# uppercase the name and select the filename and the contract in it
 	PATTERN=".contracts[\"$CONTRACT_PATH\"].${NAME^}"
 
-
-	# Compile / Build
-	#dapp build
-
-  echo "name: $NAME"
-  echo "path: $CONTRACT_PATH"
-	# get the constructor's signature
+  # get the abi
 	ABI=$(jq -r "$PATTERN.abi" out/dapp.sol.json)
-#	SIG=$(echo "$ABI" | seth --abi-constructor)
 
 	echo "$ABI"
 }
