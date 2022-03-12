@@ -18,8 +18,8 @@ clean  		:; dapp clean && rm -rf ./tmp/*
 test   		:; dapp test -v
 fuzz   		:; dapp test --fuzz-runs 100
 debug  		:; dapp debug 
-estimate 	:; ./scripts/estimate-gas.sh ${contract}
-size   		:; ./scripts/contract-size.sh ${contract}
+estimate 	:; ./bin/estimate.sh ${contract}
+size   		:; ./bin/size.sh ${contract}
 
 # Deployment Helper
 deploy :; ./bin/deploy.sh

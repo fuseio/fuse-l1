@@ -1,29 +1,15 @@
 #!/usr/bin/env bash
 
+set -eo pipefail
 
+# import the deployment helpers
+. $(dirname $0)/common.sh
 
-# generate go binding for all ABIs in the output json
-generate() {
-	NAME=$1
+# Contract will be counter unless overriden on the command line
+: ${CONTRACT:=$1}
+echo "Generating $CONTRACT to $NETWORK with arguments: $arguments"
+generate $CONTRACT
+log "$CONTRACT generated at:" $Addr
 
-	# find file path
-	CONTRACT_PATH=$(find ./src -name $NAME.sol)
-	CONTRACT_PATH=${CONTRACT_PATH:2}
-
-	# select the filename and the contract in it
-	PATTERN=".contracts[\"$CONTRACT_PATH\"].$NAME"
-
-	# Compile / Build
-	#dapp build
-
-  echo "name: $NAME"
-  echo "path: $CONTRACT_PATH"
-	# get the constructor's signature
-	ABI=$(jq -r "$PATTERN.abi" out/dapp.sol.json)
-	SIG=$(echo "$ABI" | seth --abi-constructor)
-
-
-	echo "$ABI"
-}
 
 

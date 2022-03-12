@@ -56,6 +56,32 @@ cat >"$ADDRESSES_FILE" <<EOF
 }
 EOF
 
+# generate go binding for all ABIs in the output json
+generate() {
+	NAME=$1
+
+	# find file path
+	CONTRACT_PATH=$(find ./src -name $NAME.sol)
+	CONTRACT_PATH=${CONTRACT_PATH:2}
+
+	# uppercase the name and select the filename and the contract in it
+	PATTERN=".contracts[\"$CONTRACT_PATH\"].${NAME^}"
+
+
+	# Compile / Build
+	#dapp build
+
+  echo "name: $NAME"
+  echo "path: $CONTRACT_PATH"
+	# get the constructor's signature
+	ABI=$(jq -r "$PATTERN.abi" out/dapp.sol.json)
+#	SIG=$(echo "$ABI" | seth --abi-constructor)
+
+	echo "$ABI"
+}
+
+
+
 # Call as `ETH_FROM=0x... ETH_RPC_URL=<url> deploy ContractName arg1 arg2 arg3`
 # (or omit the env vars if you have already set them)
 deploy() {
@@ -66,8 +92,8 @@ deploy() {
 	CONTRACT_PATH=$(find ./src -name $NAME.sol)
 	CONTRACT_PATH=${CONTRACT_PATH:2}
 
-	# select the filename and the contract in it
-	PATTERN=".contracts[\"$CONTRACT_PATH\"].$NAME"
+	# uppercase first letter name & select the filename and the contract in it
+	PATTERN=".contracts[\"$CONTRACT_PATH\"].${NAME^}"
 
 	# Compile / Build
 	dapp build
@@ -107,8 +133,8 @@ saveContract() {
 estimate_gas() {
 	NAME=$1
 	ARGS=${@:2}
-	# select the filename and the contract in it
-	PATTERN=".contracts[\"src/$NAME.sol\"].$NAME"
+	# uppercase first letter name & select the filename and the contract in it
+	PATTERN=".contracts[\"src/$NAME.sol\"].${NAME^}"
 
 	# get the constructor's signature
 	ABI=$(jq -r "$PATTERN.abi" out/dapp.sol.json)
@@ -120,8 +146,8 @@ estimate_gas() {
 	GAS=$(seth estimate --create "$BYTECODE" "$SIG" $ARGS --rpc-url "$ETH_RPC_URL")
 
 	TXPRICE_RESPONSE=$(curl -sL https://api.txprice.com/v1)
-	response=$(jq '.code' <<<"$TXPRICE_RESPONSE")
-	if [[ $response != "200" ]]; then
+	response=$(jq '.system' <<<"$TXPRICE_RESPONSE")
+	if [[ $response == "ethereum" ]]; then
 		echo "Could not get gas information from ${TPUT_BOLD}txprice.com${TPUT_RESET}: https://api.txprice.com/v1"
 		echo "response code: $response"
 	else
