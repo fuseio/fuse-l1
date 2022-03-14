@@ -9,7 +9,7 @@ contract RollupTest is DSTest {
     Rollup r;
 
     function setUp() public {
-        r = new Rollup();
+        r = new Rollup(address(0));
     }
 
     function testFail_basic_sanity() public {
