@@ -24,4 +24,3 @@ echo $abi
 # we uppercase the contract name to create the type
 echo "Generating $CONTRACT go bindings"
 abigen -pkg $PACKAGE --type ${CONTRACT^} --abi <(echo "$abi") --out ./out/$CONTRACT.go
-
