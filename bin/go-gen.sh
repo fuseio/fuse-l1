@@ -11,14 +11,17 @@ set -eo pipefail
 . $(dirname $0)/common.sh
 
 
+# name inputs
 : ${CONTRACT:=$1}
 : ${PACKAGE:=$2}
-echo "Generating $CONTRACT to $NETWORK with arguments: $arguments"
+
+echo "Getting ABI from output json file"
 abi=$(get_abi $CONTRACT)
 echo $abi
 
 
 # create go bindings
 # we uppercase the contract name to create the type
-abigen -pkg $PACKAGE --type ${CONTRACT^} --abi <(echo "$abi")
+echo "Generating $CONTRACT go bindings"
+abigen -pkg $PACKAGE --type ${CONTRACT^} --abi <(echo "$abi") --out ./out/$CONTRACT.go
 
