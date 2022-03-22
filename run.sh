@@ -15,11 +15,17 @@ ARB_RINK=https://rinkeby.arbitrum.io/rpc
 FUSE_MAIN=https://rpc.fuse.io
 FUSE_TEST=https://rpc.fusespark.io/
 OPT_GOER=https://goerli.optimism.io/
+
+# LOCAL OPT
 SEQUENCER=http://localhost:8545
 VERIFIER=http://localhost:8547
 REPLICA=http://localhost:8549
 
 
+# private key: a6aecc98b63bafb0de3b29ae9964b14acb4086057808be29f90150214ebd4a0f
+SYSTEM_ADDRESS_0_DEPLOYER=0xa961b0d6dce82db098cf70a42a14add3ee3db2d5
+# private key: 3b8d2345102cce2443acb240db6e87c8edd4bb3f821b17fab8ea2c9da08ea132
+SYSTEM_ADDRESS_1_DEPLOYER=0xdfc82d475833a50de90c642770f34a9db7deb725
 
 # SETH [needs env]
 # max gas in fuse genesis is 10000000, so don't try to setup more
@@ -44,8 +50,10 @@ function balances {
   declare -a nets=($SEQUENCER $VERIFIER $REPLICA)
   for net in ${nets[@]}; 
     do 
-      balance=$(seth --rpc-url $net balance $WALLET_DISK | seth --from-wei)
-    printf "%8.4f  $net\n" "$balance"
+      balance=$(seth --rpc-url $net balance $SYSTEM_ADDRESS_0_DEPLOYER | seth --from-wei)
+    printf "W-0: %8.4f  $net\n" "$balance"
+      balance=$(seth --rpc-url $net balance $SYSTEM_ADDRESS_1_DEPLOYER | seth --from-wei)
+    printf "W-1: %8.4f  $net\n" "$balance"
   done
 }
 
