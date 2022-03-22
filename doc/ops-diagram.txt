@@ -1,0 +1,32 @@
+@startuml
+!theme toy
+System -> L1 : start http://l1_chain:8545
+System -> Deployer : start http://deployer:8081
+Deployer -> L1 : deploy L1 contracts
+System -> L2 : start http://l2geth:8545
+System -> DTL : start http://dtl:7878
+L2 -> DTL : http://dtl:7878
+L2 --> Deployer : http://deployer:8081/state-dump.latest.json
+DTL --> L1 : http://l1_chain:8545
+DTL --> L2 : htpp://l2geth:8545
+DTL --> Deployer : http://deployer:8081/addresses.json
+System -> Relayer : start relayer
+Relayer --> L1 : http://l1_chain:8545
+Relayer --> L2 : http://l2geth:8545
+System --> Verifier : http://verifier:8545
+Verifier --> L1 : http://l1_chain:8545
+Verifier --> L2 :  http://l2geth:8545
+Verifier --> DTL :  http://dtl:7878
+Verifier --> Deployer: http://deployer:8081/state-dump.latest.json
+System -> Replica : start http://replica:8545
+Replica --> L1 : http://l1_chain:8545
+Replica --> L2 :  http://l2geth:8545
+Replica --> Deployer :  http://deployer:8081/state-dump.latest.json
+Replica --> DTL : http://dtl:7878
+System -> GasOracle : start gas-oracle
+GasOracle --> L2 :  http://l2geth:8545
+System -> BatchSubmitter : start batch-submitter
+BatchSubmitter --> L1 :  http://l1_chain:8545
+BatchSubmitter --> L2 :  http://l2geth:8545
+BatchSubmitter --> Deployer : http://deployer:8081/addresses.json
+@enduml

@@ -1,0 +1,421 @@
+version: '3.4'
+
+
+# used several times here for the l2geth instance
+x-system-addr-env: &system-addr-env
+  # private key: a6aecc98b63bafb0de3b29ae9964b14acb4086057808be29f90150214ebd4a0f
+  # OK to publish this since it will only ever be used in itests
+  # ./l2geth/rollup/rcfg/system_address.go:74:	deployer0Env := os.Getenv("SYSTEM_ADDRESS_0_DEPLOYER")
+  # ./l2geth/rollup/rcfg/system_address.go:81:		panic("SYSTEM_ADDRESS_0_DEPLOYER specified but invalid")
+  # TODO: add fuse and spark
+  SYSTEM_ADDRESS_0_DEPLOYER: "0xa961b0d6dce82db098cf70a42a14add3ee3db2d5"
+
+  # private key: 3b8d2345102cce2443acb240db6e87c8edd4bb3f821b17fab8ea2c9da08ea132
+  # OK to publish this since it will only ever be used in itests
+  # ./l2geth/rollup/rcfg/system_address.go:75:	deployer1Env := os.Getenv("SYSTEM_ADDRESS_1_DEPLOYER")
+  # ./l2geth/rollup/rcfg/system_address.go:84:		panic("SYSTEM_ADDRESS_1_DEPLOYER specified but invalid")
+  # TODO: add fuse and spark
+  SYSTEM_ADDRESS_1_DEPLOYER: "0xdfc82d475833a50de90c642770f34a9db7deb725"
+
+
+services:
+  # this is a helper service used because there's no official hardhat image
+  l1_chain:
+    image: ethereumoptimism/hardhat:${DOCKER_TAG_HARDHAT:-latest}
+    build:
+      context: ./docker/hardhat
+      dockerfile: Dockerfile
+    env_file:
+      - ./envs/l1_chain.env
+    ports:
+      # expose the service to the host for integration testing
+      - ${L1CHAIN_HTTP_PORT:-9545}:8545
+
+  # TODO; point deployer to spark and fuse wifh funded wallets
+  # FROM base as deployer # base is nodejs
+  # WORKDIR /opt/optimism/packages/contracts
+  # COPY ./ops/scripts/deployer.sh .
+  # CMD ["yarn", "run", "deploy"]
+  deployer:
+    depends_on:
+      - l1_chain
+    build:
+      context: ..
+      dockerfile: ./ops/docker/Dockerfile.packages
+      target: deployer
+    image: ethereumoptimism/deployer:${DOCKER_TAG_DEPLOYER:-latest}
+    entrypoint: ./deployer.sh
+    environment:
+      # Env vars for the deployment script.
+      CONTRACTS_RPC_URL: http://l1_chain:8545
+      # ./packages/contracts/hardhat.config.ts:139:  process.env.CONTRACTS_DEPLOYER_KEY &&
+      # ./packages/contracts/hardhat.config.ts:143:    accounts: [process.env.CONTRACTS_DEPLOYER_KEY],
+      # ./packages/contracts/README.md:103:export CONTRACTS_DEPLOYER_KEY=...
+      # ./packages/contracts/tasks/l2-gasprice.ts:38:    process.env.CONTRACTS_DEPLOYER_KEY,
+      # ./packages/contracts/tasks/whitelist.ts:51:    process.env.CONTRACTS_DEPLOYER_KEY,
+      # ./packages/contracts/tasks/withdraw-fees.ts:36:    process.env.CONTRACTS_DEPLOYER_KEY,
+      # ./packages/contracts/tasks/set-owner.ts:34:    process.env.CONTRACTS_DEPLOYER_KEY,
+      # ./packages/contracts/tasks/fetch-batches.ts:11:// CONTRACTS_DEPLOYER_KEY
+      # ./packages/contracts/scripts/deploy-scripts/mainnet.sh:7:if [[ -z "$CONTRACTS_DEPLOYER_KEY" ]]; then
+      # ./packages/contracts/scripts/deploy-scripts/mainnet.sh:8:  echo "Must pass CONTRACTS_DEPLOYER_KEY"
+      # ./packages/contracts/scripts/deploy-scripts/kovan.sh:7:if [[ -z "$CONTRACTS_DEPLOYER_KEY" ]]; then
+      # ./packages/contracts/scripts/deploy-scripts/kovan.sh:8:  echo "Must pass CONTRACTS_DEPLOYER_KEY"
+      # ./packages/contracts/scripts/deploy-scripts/goerli.sh:7:if [[ -z "$CONTRACTS_DEPLOYER_KEY" ]]; then
+      # ./packages/contracts/scripts/deploy-scripts/goerli.sh:8:  echo "Must pass CONTRACTS_DEPLOYER_KEY"
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-trial.sh:7:if [[ -z "$CONTRACTS_DEPLOYER_KEY" ]]; then
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-trial.sh:8:  echo "Must pass CONTRACTS_DEPLOYER_KEY"
+      CONTRACTS_DEPLOYER_KEY: 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+      # ./ops/scripts/deployer.sh:49:concat_arg "--network" "CONTRACTS_TARGET_NETWORK"
+      # ./ops/scripts/deployer.sh:66:export ADDRESS_MANAGER_ADDRESS=$(cat "./deployments/$CONTRACTS_TARGET_NETWORK/Lib_AddressManager.json" | jq -r .address)
+      # ./ops/scripts/deployer.sh:69:find "./deployments/$CONTRACTS_TARGET_NETWORK" -maxdepth 1 -name '*.json' | xargs cat | jq -r '.address' > addresses.txt
+      # ./ops/scripts/deployer.sh:70:find "./deployments/$CONTRACTS_TARGET_NETWORK" -maxdepth 1 -name '*.json' | 
+      #                              sed -e "s/.\/deployments\/$CONTRACTS_TARGET_NETWORK\///g" | sed -e 's/.json//g' > filenames.txt
+      # ./packages/contracts/hardhat.config.ts:138:  process.env.CONTRACTS_TARGET_NETWORK &&
+      # ./packages/contracts/hardhat.config.ts:142:  config.networks[process.env.CONTRACTS_TARGET_NETWORK] = {
+      # ./packages/contracts/hardhat.config.ts:147:    tags: [process.env.CONTRACTS_TARGET_NETWORK],
+      # ./packages/contracts/README.md:100:export CONTRACTS_TARGET_NETWORK=...
+      # ./packages/contracts/tasks/fetch-batches.ts:10:// CONTRACTS_TARGET_NETWORK
+      # ./packages/contracts/scripts/deploy-scripts/mainnet.sh:20:CONTRACTS_TARGET_NETWORK=mainnet \
+      # ./packages/contracts/scripts/deploy-scripts/mainnet.sh:36:CONTRACTS_TARGET_NETWORK=mainnet \
+      # ./packages/contracts/scripts/deploy-scripts/kovan.sh:20:CONTRACTS_TARGET_NETWORK=kovan \
+      # ./packages/contracts/scripts/deploy-scripts/kovan.sh:36:CONTRACTS_TARGET_NETWORK=kovan \
+      # ./packages/contracts/scripts/deploy-scripts/goerli.sh:20:CONTRACTS_TARGET_NETWORK=goerli \
+      # ./packages/contracts/scripts/deploy-scripts/goerli.sh:33:CONTRACTS_TARGET_NETWORK=goerli \
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-trial.sh:20:CONTRACTS_TARGET_NETWORK=mainnet-trial \
+      CONTRACTS_TARGET_NETWORK: 'custom'
+      # /ops/scripts/deployer.sh:50:concat_arg "--ovm-address-manager-owner" "OVM_ADDRESS_MANAGER_OWNER"
+      OVM_ADDRESS_MANAGER_OWNER: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266'
+      # the same as above
+      OVM_PROPOSER_ADDRESS: '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc'
+      # the same as above
+      OVM_SEQUENCER_ADDRESS: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8'
+      # ./ops/scripts/deployer.sh:57:concat_arg "--scc-fraud-proof-window" "SCC_FRAUD_PROOF_WINDOW"
+      # ./packages/contracts/tasks/deploy.ts:10:const DEFAULT_SCC_FRAUD_PROOF_WINDOW = 60 * 60 * 24 * 7 // 7 days
+      # ./packages/contracts/tasks/deploy.ts:43:    DEFAULT_SCC_FRAUD_PROOF_WINDOW,
+      SCC_FRAUD_PROOF_WINDOW: 0
+      # ./ops/scripts/deployer.sh:58:concat_arg "--num-deploy-confirmations" "NUM_DEPLOY_CONFIRMATIONS"
+      NUM_DEPLOY_CONFIRMATIONS: 0
+      # skip compilation when run in docker-compose, since the contracts
+      # were already compiled in the builder step
+      NO_COMPILE: 1
+
+      # Env vars for the dump script.
+      # Default hardhat account 5
+      # ./infra/op-replica/envs/kovan-gen4/l2geth-replica.env:22:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x18394B52d3Cb931dfA76F63251919D051953413d
+      # ./infra/op-replica/envs/mainnet/l2geth-replica.env:24:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x648E3e8101BFaB7bf5997Bd007Fb473786019159
+      # ./infra/op-replica/envs/mainnet-staging-2/l2geth-replica.env:22:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x84f70449f90300997840eCb0918873745Ede7aE6
+      # ./infra/op-replica/envs/kovan-gen5-berlin/l2geth-replica.env:24:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x18394B52d3Cb931dfA76F63251919D051953413d
+      # ./infra/op-replica/envs/mainnet-gen5-berlin/l2geth-replica.env:24:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x7107142636C85c549690b1Aca12Bdb8052d26Ae6
+      # ./infra/op-replica/envs/mainnet-gen5-l1-berlin/l2geth-replica.env:24:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x7107142636C85c549690b1Aca12Bdb8052d26Ae6
+      # ./infra/op-replica/envs/mainnet-staging-1/l2geth-replica.env:22:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x84f70449f90300997840eCb0918873745Ede7aE6
+      # ./infra/op-replica/envs/mainnet-gen5-staging-1/l2geth-replica.env:24:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x84f70449f90300997840eCb0918873745Ede7aE6
+      # ./infra/op-replica/envs/kovan-gen5-rc6/l2geth-replica.env:23:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x18394B52d3Cb931dfA76F63251919D051953413d
+      # ./infra/op-replica/envs/mainnet-gen5-l1/l2geth-replica.env:23:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x7107142636C85c549690b1Aca12Bdb8052d26Ae6
+      # ./infra/op-replica/envs/kovan-gen5/l2geth-replica.env:24:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x18394B52d3Cb931dfA76F63251919D051953413d
+      # ./infra/op-replica/envs/mainnet-gen5/l2geth-replica.env:23:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x7107142636C85c549690b1Aca12Bdb8052d26Ae6
+      # ./infra/op-replica/envs/mainnet-l1/l2geth-replica.env:23:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x648E3e8101BFaB7bf5997Bd007Fb473786019159
+      # ./infra/op-replica/kustomize/overlays/kind-kovan-replica/envs/l2geth.env:22:ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS=0x18394B52d3Cb931dfA76F63251919D051953413d
+      # ./ops/docker-compose.yml:104:      GAS_PRICE_ORACLE_OWNER: '0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc'
+      # ./l2geth/CHANGELOG.md:244:- 01646a0a: Add new config `ROLLUP_GAS_PRICE_ORACLE_OWNER_ADDRESS` to set the owner of the gas price oracle at runtime
+      # ./packages/contracts/bin/take-dump.ts:26:  const gasPriceOracleOwner = env.GAS_PRICE_ORACLE_OWNER
+      # ./packages/contracts/bin/take-dump.ts:72:  ensure(gasPriceOracleOwner, 'GAS_PRICE_ORACLE_OWNER')
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-genesis.sh:10:export GAS_PRICE_ORACLE_OWNER=0x7107142636C85c549690b1Aca12Bdb8052d26Ae6
+      # ./packages/contracts/scripts/deploy-scripts/goerli-genesis.sh:10:export GAS_PRICE_ORACLE_OWNER=0x84f70449f90300997840eCb0918873745Ede7aE6
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-trial-genesis.sh:10:export GAS_PRICE_ORACLE_OWNER=0x84f70449f90300997840eCb0918873745Ede7aE6
+      # ./packages/contracts/scripts/deploy-scripts/kovan-genesis.sh:10:export GAS_PRICE_ORACLE_OWNER=0x84f70449f90300997840eCb0918873745Ede7aE6
+      GAS_PRICE_ORACLE_OWNER: '0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc'
+      # setting the whitelist owner to address(0) disables the whitelist
+      # ./packages/contracts/bin/take-dump.ts:24:  const whitelistOwner = env.WHITELIST_OWNER
+      # ./packages/contracts/bin/take-dump.ts:71:  ensure(whitelistOwner, 'WHITELIST_OWNER')
+      # ./packages/contracts/bin/take-dump.ts:82:  if (env.WHITELIST_OWNER === '0x' + '00'.repeat(20)) {
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-genesis.sh:9:export WHITELIST_OWNER=0x648E3e8101BFaB7bf5997Bd007Fb473786019159
+      # ./packages/contracts/scripts/deploy-scripts/goerli-genesis.sh:9:export WHITELIST_OWNER=0x0000000000000000000000000000000000000000
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-trial-genesis.sh:9:export WHITELIST_OWNER=0x0000000000000000000000000000000000000000
+      # ./packages/contracts/scripts/deploy-scripts/kovan-genesis.sh:9:export WHITELIST_OWNER=0x0000000000000000000000000000000000000000
+      WHITELIST_OWNER: '0x0000000000000000000000000000000000000000'
+      # ./infra/op-replica/envs/kovan-gen4/l2geth-replica.env:10:ETH1_L1_FEE_WALLET_ADDRESS=0x18394B52d3Cb931dfA76F63251919D051953413d
+      # ./infra/op-replica/envs/mainnet/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0x391716d440c151c42cdf1c95c1d83a5427bca52c
+      # ./infra/op-replica/envs/mainnet-staging-2/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0xB79f76EF2c5F0286176833E7B2eEe103b1CC3244
+      # ./infra/op-replica/envs/kovan-gen5-berlin/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0x18394B52d3Cb931dfA76F63251919D051953413d
+      # ./infra/op-replica/envs/mainnet-gen5-berlin/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0x391716d440c151c42cdf1c95c1d83a5427bca52c
+      # ./infra/op-replica/envs/mainnet-gen5-l1-berlin/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0x391716d440c151c42cdf1c95c1d83a5427bca52c
+      # ./infra/op-replica/envs/mainnet-staging-1/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0x391716d440c151c42cdf1c95c1d83a5427bca52c
+      # ./infra/op-replica/envs/mainnet-gen5-staging-1/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0x391716d440c151c42cdf1c95c1d83a5427bca52c
+      # ./infra/op-replica/envs/kovan-gen5-rc6/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0x18394B52d3Cb931dfA76F63251919D051953413d
+      # ./infra/op-replica/envs/mainnet-gen5-l1/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0x391716d440c151c42cdf1c95c1d83a5427bca52c
+      # ./infra/op-replica/envs/kovan-gen5/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0x18394B52d3Cb931dfA76F63251919D051953413d
+      # ./infra/op-replica/envs/mainnet-gen5/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0x391716d440c151c42cdf1c95c1d83a5427bca52c
+      # ./infra/op-replica/envs/mainnet-l1/l2geth-replica.env:12:ETH1_L1_FEE_WALLET_ADDRESS=0x391716d440c151c42cdf1c95c1d83a5427bca52c
+      # ./infra/op-replica/kustomize/overlays/kind-kovan-replica/envs/l2geth.env:11:ETH1_L1_FEE_WALLET_ADDRESS=0x18394B52d3Cb931dfA76F63251919D051953413d
+      # ./ops/docker-compose.yml:136:      L1_FEE_WALLET_ADDRESS: '0x391716d440c151c42cdf1c95c1d83a5427bca52c'
+      # ./packages/contracts/bin/take-dump.ts:65:  const l1FeeWalletAddress = env.L1_FEE_WALLET_ADDRESS
+      # ./packages/contracts/bin/take-dump.ts:77:  ensure(l1FeeWalletAddress, 'L1_FEE_WALLET_ADDRESS')
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-genesis.sh:7:export L1_FEE_WALLET_ADDRESS=0x391716d440c151c42cdf1c95c1d83a5427bca52c
+      # ./packages/contracts/scripts/deploy-scripts/goerli-genesis.sh:7:export L1_FEE_WALLET_ADDRESS=0xB79f76EF2c5F0286176833E7B2eEe103b1CC3244
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-trial-genesis.sh:7:export L1_FEE_WALLET_ADDRESS=0xB79f76EF2c5F0286176833E7B2eEe103b1CC3244
+      # ./packages/contracts/scripts/deploy-scripts/kovan-genesis.sh:7:export L1_FEE_WALLET_ADDRESS=0xB79f76EF2c5F0286176833E7B2eEe103b1CC3244
+      L1_FEE_WALLET_ADDRESS: '0x391716d440c151c42cdf1c95c1d83a5427bca52c'
+      # ./ops/docker-compose.yml:158:      L2_CHAIN_ID: 987
+      # ./packages/contracts/bin/take-dump.ts:58:  const l2ChainId = parseInt(env.L2_CHAIN_ID, 10)
+      # ./packages/contracts/bin/take-dump.ts:74:  ensure(l2ChainId, 'L2_CHAIN_ID')
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-genesis.sh:4:export L2_CHAIN_ID=10
+      # ./packages/contracts/scripts/deploy-scripts/goerli-genesis.sh:4:export L2_CHAIN_ID=420
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-trial-genesis.sh:4:export L2_CHAIN_ID=66666
+      # ./packages/contracts/scripts/deploy-scripts/kovan-genesis.sh:4:export L2_CHAIN_ID=69
+      L2_CHAIN_ID: 987
+      # ./ops/envs/geth.env:37:L2_BLOCK_GAS_LIMIT=15000000
+      # ./packages/contracts/bin/take-dump.ts:56:  const l2BlockGasLimit = parseInt(env.L2_BLOCK_GAS_LIMIT, 10)
+      # ./packages/contracts/bin/take-dump.ts:73:  ensure(l2BlockGasLimit, 'L2_BLOCK_GAS_LIMIT')
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-genesis.sh:3:export L2_BLOCK_GAS_LIMIT=15000000
+      # ./packages/contracts/scripts/deploy-scripts/goerli-genesis.sh:3:export L2_BLOCK_GAS_LIMIT=15000000
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-trial-genesis.sh:3:export L2_BLOCK_GAS_LIMIT=15000000
+      # ./packages/contracts/scripts/deploy-scripts/kovan-genesis.sh:3:export L2_BLOCK_GAS_LIMIT=15000000
+      L2_BLOCK_GAS_LIMIT: 15000000
+      # ./infra/op-replica/envs/mainnet/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./infra/op-replica/envs/mainnet-staging-2/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x27770a9694e4B4b1E130Ab91Bc327C36855f612E
+      # ./infra/op-replica/envs/kovan/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./infra/op-replica/envs/kovan-gen5-berlin/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./infra/op-replica/envs/mainnet-gen5-berlin/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./infra/op-replica/envs/mainnet-gen5-l1-berlin/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./infra/op-replica/envs/mainnet-staging-1/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x27770a9694e4B4b1E130Ab91Bc327C36855f612E
+      # ./infra/op-replica/envs/mainnet-gen5-staging-1/l2geth-replica.env:2:BLOCK_SIGNER_ADDRESS=0x27770a9694e4B4b1E130Ab91Bc327C36855f612E
+      # ./infra/op-replica/envs/kovan-gen5-rc6/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./infra/op-replica/envs/mainnet-gen5-l1/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./infra/op-replica/envs/kovan-gen5/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x27770a9694e4B4b1E130Ab91Bc327C36855f612E
+      # ./infra/op-replica/envs/mainnet-gen5/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./infra/op-replica/envs/mainnet-l1/l2geth-replica.env:8:BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./infra/op-replica/kustomize/public-overlays/mainnet-replica-0-5-8/patches/l2geth-resources.yaml:17:            - --unlock=$(BLOCK_SIGNER_ADDRESS)
+      # ./infra/op-replica/kustomize/public-overlays/mainnet-replica-0-5-8/patches/l2geth-resources.yaml:19:            - --miner.etherbase=$(BLOCK_SIGNER_ADDRESS)
+      # ./infra/op-replica/kustomize/bases/l2geth-replica/statefulset.yaml:45:          - --unlock=$(BLOCK_SIGNER_ADDRESS)
+      # ./infra/op-replica/kustomize/bases/l2geth-replica/statefulset.yaml:47:          - --miner.etherbase=$(BLOCK_SIGNER_ADDRESS)
+      # ./infra/op-replica/scripts/l2geth-replica-start.sh:8:if [[ -z $BLOCK_SIGNER_ADDRESS ]]; then
+      # ./infra/op-replica/scripts/l2geth-replica-start.sh:9:    echo "Must pass BLOCK_SIGNER_ADDRESS"
+      # ./infra/op-replica/scripts/l2geth-replica-start.sh:18:  --unlock=$BLOCK_SIGNER_ADDRESS \
+      # ./infra/op-replica/scripts/l2geth-replica-start.sh:20:  --miner.etherbase=$BLOCK_SIGNER_ADDRESS \
+      # ./ops/docker-compose.yml:174:      BLOCK_SIGNER_ADDRESS: '0x00000398232E2064F896018496b4b44b3D62751F'
+      # ./ops/docker-compose.yml:234:      BLOCK_SIGNER_ADDRESS: '0x00000398232E2064F896018496b4b44b3D62751F'
+      # ./ops/envs/geth.env:35:BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./ops/scripts/geth.sh:50:  --unlock $BLOCK_SIGNER_ADDRESS \
+      # ./ops/scripts/geth.sh:52:  --miner.etherbase $BLOCK_SIGNER_ADDRESS \
+      # ./l2geth/scripts/start.sh:20:BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./l2geth/scripts/start.sh:187:cmd="$cmd --unlock=$BLOCK_SIGNER_ADDRESS"
+      # ./l2geth/scripts/start.sh:188:cmd="$cmd --miner.etherbase=$BLOCK_SIGNER_ADDRESS"
+      # ./go/stackman/controllers/cliquel1_controller.go:211:						Name:  "BLOCK_SIGNER_ADDRESS",
+      # ./go/stackman/controllers/cliquel1_controller.go:324:	--unlock=$BLOCK_SIGNER_ADDRESS \
+      # ./go/stackman/controllers/cliquel1_controller.go:326:	--miner.etherbase=$BLOCK_SIGNER_ADDRESS \
+      # ./go/stackman/controllers/sequencer_controller.go:370:  --unlock="$BLOCK_SIGNER_ADDRESS" \
+      # ./go/stackman/controllers/sequencer_controller.go:372:  --miner.etherbase=$BLOCK_SIGNER_ADDRESS \
+      # ./packages/contracts/bin/take-dump.ts:60:  const blockSignerAddress = env.BLOCK_SIGNER_ADDRESS
+      # ./packages/contracts/bin/take-dump.ts:75:  ensure(blockSignerAddress, 'BLOCK_SIGNER_ADDRESS')
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-genesis.sh:5:export BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      # ./packages/contracts/scripts/deploy-scripts/goerli-genesis.sh:5:export BLOCK_SIGNER_ADDRESS=0x27770a9694e4B4b1E130Ab91Bc327C36855f612E
+      # ./packages/contracts/scripts/deploy-scripts/mainnet-trial-genesis.sh:5:export BLOCK_SIGNER_ADDRESS=0x27770a9694e4B4b1E130Ab91Bc327C36855f612E
+      # ./packages/contracts/scripts/deploy-scripts/kovan-genesis.sh:5:export BLOCK_SIGNER_ADDRESS=0x00000398232E2064F896018496b4b44b3D62751F
+      BLOCK_SIGNER_ADDRESS: '0x00000398232E2064F896018496b4b44b3D62751F'
+      # ./packages/contracts/bin/take-dump.ts:29:    env.GAS_PRICE_ORACLE_OVERHEAD || '2750',
+      GAS_PRICE_ORACLE_OVERHEAD: 2750
+      # ./packages/contracts/bin/take-dump.ts:35:    env.GAS_PRICE_ORACLE_SCALAR || '1500000',
+      GAS_PRICE_ORACLE_SCALAR: 1500000
+      # ./go/gas-oracle/flags/flags.go:96:		EnvVar: "GAS_PRICE_ORACLE_L1_BASE_FEE_SIGNIFICANT_FACTOR",
+      # ./packages/contracts/bin/take-dump.ts:46:    env.GAS_PRICE_ORACLE_L1_BASE_FEE || '1',
+      GAS_PRICE_ORACLE_L1_BASE_FEE: 1
+      # ./go/gas-oracle/flags/flags.go:34:		EnvVar: "GAS_PRICE_ORACLE_GAS_PRICE_ORACLE_ADDRESS",
+      # ./go/gas-oracle/README.md:60:   --gas-price-oracle-address value           Address of OVM_GasPriceOracle (default: "0x420000000000000000000000000000000000000F") [$GAS_PRICE_ORACLE_GAS_PRICE_ORACLE_ADDRESS]
+      # ./packages/contracts/bin/take-dump.ts:51:    env.GAS_PRICE_ORACLE_GAS_PRICE || '1',
+      GAS_PRICE_ORACLE_GAS_PRICE: 1
+      # packages/contracts/bin/take-dump.ts:40:    env.GAS_PRICE_ORACLE_DECIMALS || '6',
+      GAS_PRICE_ORACLE_DECIMALS: 6
+    ports:
+      # expose the service to the host for getting the contract addrs
+      - ${DEPLOYER_PORT:-8080}:8081
+
+  dtl:
+    depends_on:
+      - l1_chain
+      - deployer
+      - l2geth
+    build:
+      context: ..
+      dockerfile: ./ops/docker/Dockerfile.packages
+      target: data-transport-layer
+    image: ethereumoptimism/data-transport-layer:${DOCKER_TAG_DATA_TRANSPORT_LAYER:-latest}
+    # override with the dtl script and the env vars required for it
+    entrypoint: ./dtl.sh
+    env_file:
+      - ./envs/dtl.env
+    # set the rest of the env vars for the network whcih do not
+    # depend on the docker-compose setup
+    environment:
+      # used for setting the address manager address
+      URL: http://deployer:8081/addresses.json
+      # connect to the 2 layers
+      DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT: http://l1_chain:8545
+      DATA_TRANSPORT_LAYER__L2_RPC_ENDPOINT: http://l2geth:8545
+      DATA_TRANSPORT_LAYER__SYNC_FROM_L2: 'true'
+      DATA_TRANSPORT_LAYER__L2_CHAIN_ID: 987
+    ports:
+      - ${DTL_PORT:-7878}:7878
+
+  l2geth:
+    depends_on:
+      - l1_chain
+      - deployer
+    build:
+      context: ..
+      dockerfile: ./ops/docker/Dockerfile.geth
+    image: ethereumoptimism/l2geth:${DOCKER_TAG_L2GETH:-latest}
+    # override with the geth script and the env vars required for it
+    entrypoint: sh ./geth.sh
+    env_file:
+      - ./envs/geth.env
+    environment:
+      <<: *system-addr-env
+      ETH1_HTTP: http://l1_chain:8545
+      ROLLUP_TIMESTAMP_REFRESH: 5s
+      ROLLUP_STATE_DUMP_PATH: http://deployer:8081/state-dump.latest.json
+      # connecting to the DTL
+      ROLLUP_CLIENT_HTTP: http://dtl:7878
+      ETH1_CTC_DEPLOYMENT_HEIGHT: 8
+      RETRIES: 60
+      # no need to keep this secret, only used internally to sign blocks
+      BLOCK_SIGNER_KEY: '6587ae678cf4fc9a33000cdbf9f35226b71dcc6a4684a31203241f9bcfd55d27'
+      BLOCK_SIGNER_ADDRESS: '0x00000398232E2064F896018496b4b44b3D62751F'
+
+      ROLLUP_ENFORCE_FEES: ${ROLLUP_ENFORCE_FEES:-true}
+      ROLLUP_FEE_THRESHOLD_DOWN: 0.9
+      ROLLUP_FEE_THRESHOLD_UP: 1.1
+    ports:
+      - ${L2GETH_HTTP_PORT:-8545}:8545
+      - ${L2GETH_WS_PORT:-8546}:8546
+
+  relayer:
+    depends_on:
+      - l1_chain
+      - l2geth
+    deploy:
+      replicas: 0
+    build:
+      context: ..
+      dockerfile: ./ops/docker/Dockerfile.packages
+      target: message-relayer
+    image: ethereumoptimism/message-relayer:${DOCKER_TAG_MESSAGE_RELAYER:-latest}
+    entrypoint: ./relayer.sh
+    environment:
+      MESSAGE_RELAYER__L1_RPC_PROVIDER: http://l1_chain:8545
+      MESSAGE_RELAYER__L2_RPC_PROVIDER: http://l2geth:8545
+      MESSAGE_RELAYER__L1_WALLET: '0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97'
+      RETRIES: 60
+
+  verifier:
+    depends_on:
+      - l1_chain
+      - deployer
+      - dtl
+      - l2geth
+    deploy:
+      replicas: 1
+    build:
+      context: ..
+      dockerfile: ./ops/docker/Dockerfile.geth
+    image: ethereumoptimism/l2geth:${DOCKER_TAG_L2GETH:-latest}
+    entrypoint: sh ./geth.sh
+    env_file:
+      - ./envs/geth.env
+    environment:
+      <<: *system-addr-env
+      ETH1_HTTP: http://l1_chain:8545
+      SEQUENCER_CLIENT_HTTP: http://l2geth:8545
+      ROLLUP_STATE_DUMP_PATH: http://deployer:8081/state-dump.latest.json
+      ROLLUP_CLIENT_HTTP: http://dtl:7878
+      ROLLUP_BACKEND: 'l1'
+      ETH1_CTC_DEPLOYMENT_HEIGHT: 8
+      RETRIES: 60
+      ROLLUP_VERIFIER_ENABLE: 'true'
+    ports:
+      - ${VERIFIER_HTTP_PORT:-8547}:8545
+      - ${VERIFIER_WS_PORT:-8548}:8546
+
+  replica:
+    depends_on:
+      - dtl
+      - l2geth
+    deploy:
+      replicas: 1
+    build:
+      context: ..
+      dockerfile: ./ops/docker/Dockerfile.geth
+    image: ethereumoptimism/l2geth:${DOCKER_TAG_L2GETH:-latest}
+    entrypoint: sh ./geth.sh
+    env_file:
+      - ./envs/geth.env
+    environment:
+      <<: *system-addr-env
+      ETH1_HTTP: http://l1_chain:8545
+      SEQUENCER_CLIENT_HTTP: http://l2geth:8545
+      ROLLUP_STATE_DUMP_PATH: http://deployer:8081/state-dump.latest.json
+      ROLLUP_CLIENT_HTTP: http://dtl:7878
+      ROLLUP_BACKEND: 'l2'
+      ROLLUP_VERIFIER_ENABLE: 'true'
+      ETH1_CTC_DEPLOYMENT_HEIGHT: 8
+      RETRIES: 60
+    ports:
+      - ${REPLICA_HTTP_PORT:-8549}:8545
+      - ${REPLICA_WS_PORT:-8550}:8546
+
+  integration_tests:
+    deploy:
+      replicas: 0
+    build:
+      context: ..
+      dockerfile: ./ops/docker/Dockerfile.packages
+      target: integration-tests
+    image: ethereumoptimism/integration-tests:${DOCKER_TAG_INTEGRATION_TESTS:-latest}
+    entrypoint: ./integration-tests.sh
+    environment:
+      L1_URL: http://l1_chain:8545
+      L2_URL: http://l2geth:8545
+      REPLICA_URL: http://replica:8545
+      VERIFIER_URL: http://verifier:8545
+      URL: http://deployer:8081/addresses.json
+      ENABLE_GAS_REPORT: 1
+      NO_NETWORK: 1
+      BATCH_SUBMITTER_SEQUENCER_BATCH_TYPE: ${BATCH_SUBMITTER_SEQUENCER_BATCH_TYPE:-zlib}
+
+      RUN_SYSTEM_ADDRESS_TESTS: "true"
+
+      # must match l2geth environment, see above for why it's safe to publish these
+      SYSTEM_ADDRESS_0_DEPLOYER_KEY: "a6aecc98b63bafb0de3b29ae9964b14acb4086057808be29f90150214ebd4a0f"
+      SYSTEM_ADDRESS_1_DEPLOYER_KEY: "3b8d2345102cce2443acb240db6e87c8edd4bb3f821b17fab8ea2c9da08ea132"
+
+  gas_oracle:
+    deploy:
+      replicas: 0
+    build:
+      context: ..
+      dockerfile: ./ops/docker/Dockerfile.gas-oracle
+    image: ethereumoptimism/gas-oracle:${DOCKER_TAG_GAS_ORACLE:-latest}
+    entrypoint: ./gas-oracle.sh
+    environment:
+      GAS_PRICE_ORACLE_ETHEREUM_HTTP_URL: http://l2geth:8545
+      # Default hardhat account 5
+      GAS_PRICE_ORACLE_PRIVATE_KEY: '0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba'
+
+  batch_submitter:
+    depends_on:
+      - l1_chain
+      - deployer
+      - l2geth
+    build:
+      context: ..
+      dockerfile: ./ops/docker/Dockerfile.batch-submitter-service
+    image: ethereumoptimism/batch-submitter-service:${DOCKER_TAG_BATCH_SUBMITTER_SERVICE:-latest}
+    entrypoint: ./batch-submitter.sh
+    env_file:
+      - ./envs/batch-submitter.env
+    environment:
+      L1_ETH_RPC: http://l1_chain:8545
+      L2_ETH_RPC: http://l2geth:8545
+      URL: http://deployer:8081/addresses.json
+      BATCH_SUBMITTER_SEQUENCER_PRIVATE_KEY: '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d'
+      BATCH_SUBMITTER_PROPOSER_PRIVATE_KEY: '0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a'
+      BATCH_SUBMITTER_SEQUENCER_BATCH_TYPE: ${BATCH_SUBMITTER_SEQUENCER_BATCH_TYPE:-zlib}
