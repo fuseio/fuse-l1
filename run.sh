@@ -26,6 +26,7 @@ REPLICA=http://localhost:8549
 SYSTEM_ADDRESS_0_DEPLOYER=0xa961b0d6dce82db098cf70a42a14add3ee3db2d5
 # private key: 3b8d2345102cce2443acb240db6e87c8edd4bb3f821b17fab8ea2c9da08ea132
 SYSTEM_ADDRESS_1_DEPLOYER=0xdfc82d475833a50de90c642770f34a9db7deb725
+L1_WALLET=0x70997970c51812dc3a010c7d01b50e0d17dc79c8
 
 # SETH [needs env]
 # max gas in fuse genesis is 10000000, so don't try to setup more
@@ -40,7 +41,7 @@ export ETH_GAS_PRICE=10100010000
 
 
 export ETH_RPC_URL=$SEQUENCER
-export ETH_FROM=$WALLET_DISK
+export ETH_FROM=$L1_WALLET
 
 
 
