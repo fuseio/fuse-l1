@@ -1,4 +1,0 @@
-# SETH CONFIG [needs env]
-# max gas in genesis is 10000000, so don't try to setup more
-PASSWORD=./keys/PASS
-KEYSTORE=./keys
