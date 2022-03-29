@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.5.0) (token/ERC20/presets/ERC20PresetFixedSupply.sol)
 pragma solidity ^0.8.0;
 
 import "../extensions/ERC20Burnable.sol";
@@ -15,8 +14,6 @@ import "../extensions/ERC20Burnable.sol";
  * its documentation for details.
  *
  * _Available since v3.4._
- *
- * _Deprecated in favor of https://wizard.openzeppelin.com/[Contracts Wizard]._
  */
 contract ERC20PresetFixedSupply is ERC20Burnable {
     /**
