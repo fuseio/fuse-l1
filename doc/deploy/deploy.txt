@@ -1,0 +1,40 @@
+deploying "Lib_AddressManager"
+(tx: 0x8f2f98f70934a1469aa394974dc2270595ddfea8f0ebac39d7aae895a260aa7a)...:
+deployed at 0xE2eaBc78232429D81eb319bB3e93abe14B8a4726 with 463444 gas
+
+deploying "ChainStorageContainer-CTC-batches"
+(tx: 0x6d04f0881fd6e590690c8c7f7c00eb2dcc1a5369c19888567cda3e745f6e4f0a)...:
+deployed at 0xE753E75D23D773820cE0A56Cf20463532F8E2Dbd with 946990 gas
+
+deploying "ChainStorageContainer-SCC-batches"
+(tx: 0x4a92321a85851a39dd019b70cbb9fea93d22172bb2e2252ba60a6609e31ed0c3)...:
+deployed at 0x55533eBf74F77ac0D7B60e8Af740fEb2E956DD7a with 946930 gas
+
+deploying "CanonicalTransactionChain"
+(tx: 0xe42a3cea911de489543183497c25dcd6eb1f7123d08af8a182848aa4cb203c20)...:
+deployed at 0x9a65eF86f94ee2733508400bCFc4D121352dCC99 with 1577250 gas
+
+deploying "StateCommitmentChain"
+(tx: 0x9527c6ad01b33d56f875cb52b3c5ac8cb8550a30b34ec447d6c08f7cacae4fb2)...:
+deployed at 0x87f5D0295b1371909970bE7D8713590b0Dec96D6 with 1888173 gas
+
+deploying "BondManager"
+(tx: 0x245aa9e1c0ef5602432ca3475f73816eb1bccc11854258b4a9c514474ff7d36d)...:
+deployed at 0x7e0e0ac6f639eE4534580792B57E0f824E8BF174 with 295574 gas
+
+deploying "OVM_L1CrossDomainMessenger"
+(tx: 0x7e4497c0caf2a8395d8245643b4d0571d35c26057356102be661584f0051c9d0)...:
+deployed at 0xEfA9802e007496fB797AFc455341Fed0fC0287fB with 3394374 gas
+
+deploying "Proxy__OVM_L1CrossDomainMessenger"
+(tx: 0xacf69ede7b75f73bb19f721e545acf4ee01b1afd690d1e46dac5eab7deaab7b0)...:
+deployed at 0x3A6B068890245538c94701eEDdEFc4F8A43bb202 with 291461 gas
+
+deploying "Proxy__OVM_L1StandardBridge"
+(tx: 0x1d049670fdf3fc833de95f4e3dde5d7e546d01595f28395b0bc1f8f44edad4a8)...:
+deployed at 0x349Bc296D9945b1D4004d6De029BeAB33A78DEdc with 614417 gas
+
+deploying "AddressDictator"
+(tx: 0x15ebac9377b26d49a3ddbd885d8da4ec9acbcb761698f6b0ffc26cdcb5c38dcf)...:
+deployed at 0x5109b75B41b4a6b2fD7A1BC29Db2ED67598946Ba with 1222262 gas
+
