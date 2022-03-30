@@ -19,9 +19,6 @@ function finalOwner() external view returns (address)
 
 
 
-
-
-
 #### Returns
 
 | Name | Type | Description |
@@ -99,20 +96,17 @@ This is the only transaction there.
 ## Call Graph
 
 ![call](../diagrams/address-dictator.svg)
-<img src="../diagrams/address-dictator.svg">
 
 
-## Call Graph
+## Call Graph Full
 
 ![call](../diagrams/address-dictator-full.svg)
-<img src="../diagrams/address-dictator-full.svg">
 
 
 ## Inheritance
 
 
 ![call](../diagrams/address-dictator-inheritance.svg)
-<img src="../diagrams/address-dictator-inheritance.svg">
 
 
 
