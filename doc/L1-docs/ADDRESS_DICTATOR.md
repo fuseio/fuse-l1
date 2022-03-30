@@ -161,4 +161,42 @@ custom_mark10
 
 
 
+ Sūrya's Description Report
+
+ Files Description Table
+
+
+|  File Name  |  SHA-1 Hash  |
+|-------------|--------------|
+| /home/henry/fuse/fuse-l1/src/L1/deployment/AddressDictator.sol | 536079e479d8a46c365d2740f0868d253941629f |
+| /home/henry/fuse/fuse-l1/src/libraries/resolver/Lib_AddressManager.sol | a800d9912e132d96d03b8fff3760be510f94a424 |
+
+
+ Contracts Description Table
+
+
+|  Contract  |         Type        |       Bases      |                  |                 |
+|:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
+|     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
+||||||
+| **AddressDictator** | Implementation |  |||
+| └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
+| └ | setAddresses | External ❗️ | 🛑  |NO❗️ |
+| └ | returnOwnership | External ❗️ | 🛑  |NO❗️ |
+| └ | getNamedAddresses | External ❗️ |   |NO❗️ |
+||||||
+| **Lib_AddressManager** | Implementation | Ownable |||
+| └ | setAddress | External ❗️ | 🛑  | onlyOwner |
+| └ | getAddress | External ❗️ |   |NO❗️ |
+| └ | _getNameHash | Internal 🔒 |   | |
+
+
+ Legend
+
+|  Symbol  |  Meaning  |
+|:--------:|-----------|
+|    🛑    | Function can modify state |
+|    💵    | Function is payable |
+
+
 
