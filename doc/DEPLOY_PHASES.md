@@ -6,7 +6,7 @@ This document contains a more detailed description of the Optimism codebase, and
 The diagram below is an example of a development deployment. The production should be 90% similar to this.
 
 
-![sequence-diagram](https://github.com/henry-hz/optimism/blob/deploy-fuse-l1-contracts/fuse-docs/diagrams/deploy-phases.png)
+![sequence-diagram](./diagrams/deploy-phases.png)
 
 
 

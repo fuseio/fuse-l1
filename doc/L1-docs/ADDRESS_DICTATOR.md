@@ -159,7 +159,23 @@ custom_mark10
 </details>
 
 
+## Inheritance
 
+![Alt text](https://g.gravizo.com/source/custom_mark10?https%3A%2F%2Fraw.githubusercontent.com%2FTLmaK0%2Fgravizo%2Fmaster%2FREADME.md)
+<details> 
+<summary></summary>
+custom_mark10
+
+digraph G {
+  graph [ ratio = "auto", page = "40" ];
+  "AddressDictator";
+  "Lib_AddressManager";
+  "Ownable";
+  "Lib_AddressManager" -> "Ownable";
+}
+
+custom_mark10
+</details>
 
  Sūrya's Description Report
 
