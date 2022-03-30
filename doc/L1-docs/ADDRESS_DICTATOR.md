@@ -98,9 +98,7 @@ This is the only transaction there.
 
 ## Call Graph
 
-<details> 
-<summary></summary>
-custom_mark10
+![Alt Text](http://webtools.company_domain.net/graphviz/?
   digraph G {
   graph [ ratio = "auto", page = "100", compound =true, bgcolor = "#2e3e56" ];
   node [ style = "filled", fillcolor = "#edad56", color = "#edad56", penwidth =3 ];
@@ -155,16 +153,11 @@ key:i2:e -> key2:i2:w [color="white"]
 }
 }
 custom_mark10
-</details>
 
 
 ## Inheritance
 
-![Alt text](https://g.gravizo.com/source/custom_mark10?https%3A%2F%2Fraw.githubusercontent.com%2FTLmaK0%2Fgravizo%2Fmaster%2FREADME.md)
-<details> 
-<summary></summary>
 custom_mark10
-
 digraph G {
   graph [ ratio = "auto", page = "40" ];
   "AddressDictator";
@@ -173,10 +166,10 @@ digraph G {
   "Lib_AddressManager" -> "Ownable";
 }
 
-custom_mark10
-</details>
 
- Sūrya's Description Report
+
+
+##  Sūrya's Description Report
 
  Files Description Table
 
