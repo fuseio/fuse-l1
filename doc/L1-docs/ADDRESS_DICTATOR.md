@@ -98,7 +98,6 @@ This is the only transaction there.
 
 ## Call Graph
 
-![Alt text](https://github.com/henry-hz/fuse-l1/blob/master/doc/L1-docs/ADDRESS_DICTATOR.md)
 <details> 
 <summary></summary>
   ```graphviz
