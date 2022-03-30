@@ -98,7 +98,7 @@ This is the only transaction there.
 
 ## Call Graph
 
-![Alt text](https://g.gravizo.com/source/test?https%3A%2F%2Fgist.githubusercontent.com%2Fraw%2F925d142677555e6c082c3f4a87fd757e%2FREADME.md)
+![Alt text](https://github.com/henry-hz/fuse-l1/blob/master/doc/L1-docs/ADDRESS_DICTATOR.md)
 <details> 
 <summary></summary>
   ```graphviz
