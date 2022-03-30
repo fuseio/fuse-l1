@@ -97,11 +97,7 @@ This is the only transaction there.
 
 
 ## Call Graph
-
-<details> 
-<summary></summary>
-  ```graphviz
-  test
+![Alt text](https://g.gravizo.com/svg?
   digraph G {
   graph [ ratio = "auto", page = "100", compound =true, bgcolor = "#2e3e56" ];
   node [ style = "filled", fillcolor = "#edad56", color = "#edad56", penwidth =3 ];
@@ -155,9 +151,7 @@ key:i1:e -> key2:i1:w [color="#1bc6a6"]
 key:i2:e -> key2:i2:w [color="white"]
 }
 }
-test
-  ```
-  </details>
+)
 
 
 ## Inheritance
