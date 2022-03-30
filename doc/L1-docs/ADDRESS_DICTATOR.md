@@ -98,8 +98,10 @@ This is the only transaction there.
 
 ## Call Graph
 
-
-```puml
+![Alt text](https://g.gravizo.com/source/custom_mark10?https%3A%2F%2Fraw.githubusercontent.com%2FTLmaK0%2Fgravizo%2Fmaster%2FREADME.md)
+<details> 
+<summary></summary>
+custom_mark10
   digraph G {
   graph [ ratio = "auto", page = "100", compound =true, bgcolor = "#2e3e56" ];
   node [ style = "filled", fillcolor = "#edad56", color = "#edad56", penwidth =3 ];
@@ -153,8 +155,9 @@ key:i1:e -> key2:i1:w [color="#1bc6a6"]
 key:i2:e -> key2:i2:w [color="white"]
 }
 }
+custom_mark10
+</details>
 
-  ```
 
 
 
