@@ -4,6 +4,7 @@ Fuse
 
 ## Docs
 
+- network deployment
 - interface description
 - transactions examples
 - surya report
