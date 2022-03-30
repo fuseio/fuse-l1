@@ -98,7 +98,7 @@ This is the only transaction there.
 
 ## Call Graph
 
-![Alt Text](http://webtools.company_domain.net/graphviz/?
+  ```graphviz
   digraph G {
   graph [ ratio = "auto", page = "100", compound =true, bgcolor = "#2e3e56" ];
   node [ style = "filled", fillcolor = "#edad56", color = "#edad56", penwidth =3 ];
@@ -152,12 +152,13 @@ key:i1:e -> key2:i1:w [color="#1bc6a6"]
 key:i2:e -> key2:i2:w [color="white"]
 }
 }
-custom_mark10
+  ```
 
 
 ## Inheritance
 
-custom_mark10
+
+  ```graphviz
 digraph G {
   graph [ ratio = "auto", page = "40" ];
   "AddressDictator";
@@ -165,6 +166,7 @@ digraph G {
   "Ownable";
   "Lib_AddressManager" -> "Ownable";
 }
+```
 
 
 
