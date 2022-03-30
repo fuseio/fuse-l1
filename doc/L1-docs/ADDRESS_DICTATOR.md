@@ -98,82 +98,21 @@ This is the only transaction there.
 
 ## Call Graph
 
-![Alt text](https://g.gravizo.com/source/custom_mark10)
-<details> 
-<summary></summary>
-custom_mark10
-  digraph G {
-  graph [ ratio = "auto", page = "100", compound =true, bgcolor = "#2e3e56" ];
-  node [ style = "filled", fillcolor = "#edad56", color = "#edad56", penwidth =3 ];
-  edge [ color = "#fcfcfc", penwidth =2, fontname = "helvetica Neue Ultra Light" ];
-subgraph "clusterAddressDictator" {
-  graph [ label = "AddressDictator", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
-  "AddressDictator.<Constructor>" [ label = "<Constructor>", color = "#FF9797", fillcolor = "#FF9797" ];
-  "AddressDictator.setAddresses" [ label = "setAddresses", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
-  "AddressDictator.returnOwnership" [ label = "returnOwnership", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
-  "AddressDictator.getNamedAddresses" [ label = "getNamedAddresses", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
-}
-
-subgraph "clusterLib_AddressManager" {
-  graph [ label = "Lib_AddressManager", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
-  "Lib_AddressManager.setAddress" [ label = "setAddress" ];
-  "Lib_AddressManager.transferOwnership" [ label = "transferOwnership" ];
-}
-
-  "AddressDictator.setAddresses";
-  "Lib_AddressManager.setAddress";
-  "Lib_AddressManager.transferOwnership";
-  "AddressDictator.returnOwnership";
-  "AddressDictator.setAddresses" -> "Lib_AddressManager.setAddress" [ color = "white" ];
-  "AddressDictator.setAddresses" -> "Lib_AddressManager.transferOwnership" [ color = "white" ];
-  "AddressDictator.returnOwnership" -> "Lib_AddressManager.transferOwnership" [ color = "white" ];
+![call](../diagrams/address-dictator.svg)
+<img src="../diagrams/address-dictator.svg">
 
 
-rankdir=LR
-node [shape=plaintext]
-subgraph cluster_01 { 
-label = "Legend";
-key [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
-  <tr><td align="right" port="i1">Internal Call</td></tr>
-  <tr><td align="right" port="i2">External Call</td></tr>
-  <tr><td align="right" port="i3">Defined Contract</td></tr>
-  <tr><td align="right" port="i4">Undefined Contract</td></tr>
-  </table>>]
-key2 [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
-  <tr><td port="i1">&nbsp;&nbsp;&nbsp;</td></tr>
-  <tr><td port="i2">&nbsp;&nbsp;&nbsp;</td></tr>
-  <tr><td port="i3" bgcolor="#445773">&nbsp;&nbsp;&nbsp;</td></tr>
-  <tr><td port="i4">
-    <table border="1" cellborder="0" cellspacing="0" cellpadding="7" color="#e8726d">
-      <tr>
-       <td></td>
-      </tr>
-     </table>
-  </td></tr>
-  </table>>]
-key:i1:e -> key2:i1:w [color="#1bc6a6"]
-key:i2:e -> key2:i2:w [color="white"]
-}
-}
-custom_mark10
-</details>
+## Call Graph
 
-
+![call](../diagrams/address-dictator-full.svg)
+<img src="../diagrams/address-dictator-full.svg">
 
 
 ## Inheritance
 
 
-  ```graphviz
-digraph G {
-  graph [ ratio = "auto", page = "40" ];
-  "AddressDictator";
-  "Lib_AddressManager";
-  "Ownable";
-  "Lib_AddressManager" -> "Ownable";
-}
-```
-
+![call](../diagrams/address-dictator-inheritance.svg)
+<img src="../diagrams/address-dictator-inheritance.svg">
 
 
 

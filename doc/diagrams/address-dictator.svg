@@ -1,0 +1,107 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="423pt" height="400pt" viewBox="0.00 0.00 422.59 400.00">
+<g id="graph0" class="graph" transform="translate(4,396) scale(1)" data-name="G">
+
+<polygon fill="#2e3e56" stroke="transparent" points="-4,4 -4,-396 418.59,-396 418.59,4 -4,4" style=""/>
+<g id="clust1" class="cluster" data-name="clusterAddressDictator">
+
+<path fill="#445773" stroke="#445773" d="M20,-8C20,-8 192.81,-8 192.81,-8 198.81,-8 204.81,-14 204.81,-20 204.81,-20 204.81,-235 204.81,-235 204.81,-241 198.81,-247 192.81,-247 192.81,-247 20,-247 20,-247 14,-247 8,-241 8,-235 8,-235 8,-20 8,-20 8,-14 14,-8 20,-8" style=""/>
+<text text-anchor="middle" x="106.4" y="-230.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">AddressDictator</text>
+</g>
+<g id="clust2" class="cluster" data-name="clusterLib_AddressManager">
+
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M236.81,-62C236.81,-62 394.59,-62 394.59,-62 400.59,-62 406.59,-68 406.59,-74 406.59,-74 406.59,-181 406.59,-181 406.59,-187 400.59,-193 394.59,-193 394.59,-193 236.81,-193 236.81,-193 230.81,-193 224.81,-187 224.81,-181 224.81,-181 224.81,-74 224.81,-74 224.81,-68 230.81,-62 236.81,-62" style=""/>
+<text text-anchor="middle" x="315.7" y="-176.4" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">Lib_AddressManager</text>
+</g>
+<g id="clust3" class="cluster" data-name="cluster_01">
+
+<polygon fill="#2e3e56" stroke="black" points="33.4,-255 33.4,-384 350.7,-384 350.7,-255 33.4,-255" style=""/>
+<text text-anchor="middle" x="192.05" y="-367.4" font-family="Times,serif" font-size="14.00" style="">Legend</text>
+</g>
+<!-- AddressDictator.&lt;Constructor&gt; -->
+<g id="node1" class="node" pointer-events="visible" data-name="AddressDictator.&lt;Constructor&gt;">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="106.4" cy="-196" rx="67.54" ry="18" style=""/>
+<text text-anchor="middle" x="106.4" y="-191.8" font-family="Times,serif" font-size="14.00" style="">&lt;Constructor&gt;</text>
+</g>
+<!-- AddressDictator.setAddresses -->
+<g id="node2" class="node" pointer-events="visible" data-name="AddressDictator.setAddresses">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="106.4" cy="-142" rx="61.39" ry="18" style=""/>
+<text text-anchor="middle" x="106.4" y="-137.8" font-family="Times,serif" font-size="14.00" style="">setAddresses</text>
+</g>
+<!-- Lib_AddressManager.setAddress -->
+<g id="node5" class="node" pointer-events="visible" data-name="Lib_AddressManager.setAddress">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="315.7" cy="-142" rx="53.31" ry="18" style=""/>
+<text text-anchor="middle" x="315.7" y="-137.8" font-family="Times,serif" font-size="14.00" style="">setAddress</text>
+</g>
+<!-- AddressDictator.setAddresses&#45;&gt;Lib_AddressManager.setAddress -->
+<g id="edge1" class="edge" data-name="AddressDictator.setAddresses-&gt;Lib_AddressManager.setAddress">
+
+<path fill="none" stroke="white" stroke-width="2" d="M167.92,-142C194.41,-142 225.48,-142 252.19,-142" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="252.2,-145.5 262.2,-142 252.2,-138.5 252.2,-145.5" style=""/>
+</g>
+<!-- Lib_AddressManager.transferOwnership -->
+<g id="node6" class="node" pointer-events="visible" data-name="Lib_AddressManager.transferOwnership">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="315.7" cy="-88" rx="82.78" ry="18" style=""/>
+<text text-anchor="middle" x="315.7" y="-83.8" font-family="Times,serif" font-size="14.00" style="">transferOwnership</text>
+</g>
+<!-- AddressDictator.setAddresses&#45;&gt;Lib_AddressManager.transferOwnership -->
+<g id="edge2" class="edge" data-name="AddressDictator.setAddresses-&gt;Lib_AddressManager.transferOwnership">
+
+<path fill="none" stroke="white" stroke-width="2" d="M152.9,-130.15C182.06,-122.55 220.3,-112.59 252.29,-104.26" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="253.2,-107.64 261.99,-101.73 251.43,-100.86 253.2,-107.64" style=""/>
+</g>
+<!-- AddressDictator.returnOwnership -->
+<g id="node3" class="node" pointer-events="visible" data-name="AddressDictator.returnOwnership">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="106.4" cy="-88" rx="76.42" ry="18" style=""/>
+<text text-anchor="middle" x="106.4" y="-83.8" font-family="Times,serif" font-size="14.00" style="">returnOwnership</text>
+</g>
+<!-- AddressDictator.returnOwnership&#45;&gt;Lib_AddressManager.transferOwnership -->
+<g id="edge3" class="edge" data-name="AddressDictator.returnOwnership-&gt;Lib_AddressManager.transferOwnership">
+
+<path fill="none" stroke="white" stroke-width="2" d="M183.12,-88C195.93,-88 209.36,-88 222.53,-88" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="222.55,-91.5 232.55,-88 222.55,-84.5 222.55,-91.5" style=""/>
+</g>
+<!-- AddressDictator.getNamedAddresses -->
+<g id="node4" class="node" pointer-events="visible" data-name="AddressDictator.getNamedAddresses">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="106.4" cy="-34" rx="90.31" ry="18" style=""/>
+<text text-anchor="middle" x="106.4" y="-29.8" font-family="Times,serif" font-size="14.00" style="">getNamedAddresses</text>
+</g>
+<!-- key -->
+<g id="node7" class="node" pointer-events="visible" data-name="key">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="171.4,-351 41.4,-351 41.4,-263 171.4,-263 171.4,-351" style=""/>
+<text text-anchor="start" x="91.04" y="-332.4" font-family="Times,serif" font-size="14.00" style="">Internal Call</text>
+<text text-anchor="start" x="87.15" y="-312.4" font-family="Times,serif" font-size="14.00" style="">External Call</text>
+<text text-anchor="start" x="64.61" y="-292.4" font-family="Times,serif" font-size="14.00" style="">Defined Contract</text>
+<text text-anchor="start" x="51.01" y="-272.4" font-family="Times,serif" font-size="14.00" style="">Undefined Contract</text>
+</g>
+<!-- key2 -->
+<g id="node8" class="node" pointer-events="visible" data-name="key2">
+
+<polygon fill="#edad56" stroke="transparent" stroke-width="3" points="342.7,-351 288.7,-351 288.7,-263 342.7,-263 342.7,-351" style=""/>
+<text text-anchor="start" x="303.46" y="-332.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<text text-anchor="start" x="303.46" y="-312.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<polygon fill="#445773" stroke="transparent" points="301.7,-287 301.7,-307 329.7,-307 329.7,-287 301.7,-287" style=""/>
+<text text-anchor="start" x="303.46" y="-292.4" font-family="Times,serif" font-size="14.00" style="">   </text>
+<polygon fill="none" stroke="#e8726d" points="303.7,-269 303.7,-285 327.7,-285 327.7,-269 303.7,-269" style=""/>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge4" class="edge" data-name="key-&gt;key2">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M164.4,-337C221.43,-337 238.19,-337 290.5,-337" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="290.7,-340.5 300.7,-337 290.7,-333.5 290.7,-340.5" style=""/>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge5" class="edge" data-name="key-&gt;key2">
+
+<path fill="none" stroke="white" stroke-width="2" d="M164.4,-317C221.43,-317 238.19,-317 290.5,-317" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="290.7,-320.5 300.7,-317 290.7,-313.5 290.7,-320.5" style=""/>
+</g>
+</g>
+</svg>
