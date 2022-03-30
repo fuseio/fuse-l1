@@ -99,7 +99,7 @@ This is the only transaction there.
 ## Call Graph
 
 
-```mermaid
+```puml
   digraph G {
   graph [ ratio = "auto", page = "100", compound =true, bgcolor = "#2e3e56" ];
   node [ style = "filled", fillcolor = "#edad56", color = "#edad56", penwidth =3 ];
