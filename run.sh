@@ -21,6 +21,8 @@ SEQUENCER=http://localhost:8545
 VERIFIER=http://localhost:8547
 REPLICA=http://localhost:8549
 
+# tx2uml
+ARCHIVE_NODE_URL=https://api.archivenode.io/0e60a7d9-95c6-4f63-b065-1e8bd4f54137
 
 # private key: a6aecc98b63bafb0de3b29ae9964b14acb4086057808be29f90150214ebd4a0f
 SYSTEM_ADDRESS_0_DEPLOYER=0xa961b0d6dce82db098cf70a42a14add3ee3db2d5
@@ -30,18 +32,18 @@ L1_WALLET=0x70997970c51812dc3a010c7d01b50e0d17dc79c8
 
 # SETH [needs env]
 # max gas in fuse genesis is 10000000, so don't try to setup more
-export ETH_KEYSTORE=./keys
-export ETH_PASSWORD=./keys/PASS-55a9
-export ETH_GAS=1000000
-export ETH_GAS_PRICE=10100010000
+# export ETH_KEYSTORE=./keys
+# export ETH_PASSWORD=./keys/PASS-55a9
+# export ETH_GAS=1000000
+# export ETH_GAS_PRICE=10100010000
 
 
 #name=${1?missing contract name}
 
 
 
-export ETH_RPC_URL=$SEQUENCER
-export ETH_FROM=$L1_WALLET
+export ETH_RPC_URL=$ARCHIVE_NODE_URL
+export ETH_FROM=$WALLET_DISK
 
 
 
