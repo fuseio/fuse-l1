@@ -14,8 +14,80 @@ The diagram below is an example of a development deployment. The production shou
 ## Deployer
 
 
+* From the deploy.ts task, we see 3 variables we input to start the deploy to L1. Let's print a trace from the docker compose log output for everyone of them:
+
+
+* 'ovmAddressManagerOwner' - 'Address that will own the Lib_AddressManager. Must be provided or this deployment will fail.',
+
+
+* 'ovmProposerAddress' - 'Address of the account that will propose state roots. Must be provided or this deployment will fail.',
+
+
+* 'ovmSequencerAddress' - 'Address of the sequencer. Must be provided or this deployment will fail.',
+
+The ovmSequencerAddress is 0x70997970c51812dc3a010c7d01b50e0d17dc79c8 , and is inputed in the deployemnt time, so in step 10, it will be injected in the AddressDictator.
+```
+- it sends to bridge contract and fund the sequencer wallet in L2
+
+541 - deployer_1           | OVM_SEQUENCER_ADDRESS set to 0x70997970c51812dc3a010c7d01b50e0d17dc79c8, applying --ovm-sequencer-address argument.
+
+561 l1_chain_1           | Account #1: 0x70997970c51812dc3a010c7d01b50e0d17dc79c8 (10000 ETH)
+
+567 deployer_1           | npx hardhat deploy --network "custom" --ovm-address-manager-owner "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266" --ovm-proposer-address "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc" --ovm-sequencer-address "0x70997970c51812dc3a010c7d01b50e0d17dc79c8" --scc-fraud-proof-window "0" --num-deploy-confirmations "0"
+
+1661deployer_1           |         OVM_Sequencer                             0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+
+l1_chain_1           |   From:                0x70997970c51812dc3a010c7d01b50e0d17dc79c8
+l1_chain_1           |   To:                  0x610178da211fef7d417bc0e6fed39f05609ad788
+
+deployer_1           | ✓ Funded 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 on L2 with 5000.0 ETH
+
+batch_submitter_1    | INFO [03-22|16:42:52.620] Sequencer wallet params parsed successfully wallet_address=0x70997970C51812dc3A010C7d01b50e0d17dc79C8 contract_address=0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
+batch_submitter_1    | INFO [03-22|16:42:52.620] Proposer wallet params parsed successfully wallet_address=0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC contract_address=0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
+```
+
+
+
+
+
 * deploy the hardhat sequence in the deploy folder
 * start a server with the outputs.
+
+
+* dynamic environment [from the docker-compose]
+
+
+```
+CONTRACTS_RPC_URL: http://l1_chain:8545
+CONTRACTS_DEPLOYER_KEY: 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+CONTRACTS_TARGET_NETWORK: 'custom'
+OVM_ADDRESS_MANAGER_OWNER: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266'
+OVM_PROPOSER_ADDRESS: '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc'
+OVM_SEQUENCER_ADDRESS: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8'
+SCC_FRAUD_PROOF_WINDOW: 0
+NUM_DEPLOY_CONFIRMATIONS: 0
+# skip compilation when run in docker-compose, since the contracts
+# were already compiled in the builder step
+NO_COMPILE: 1
+
+# Env vars for the dump script.
+# Default hardhat account 5
+GAS_PRICE_ORACLE_OWNER: '0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc'
+# setting the whitelist owner to address(0) disables the whitelist
+WHITELIST_OWNER: '0x0000000000000000000000000000000000000000'
+L1_FEE_WALLET_ADDRESS: '0x391716d440c151c42cdf1c95c1d83a5427bca52c'
+L2_CHAIN_ID: 987
+L2_BLOCK_GAS_LIMIT: 15000000
+BLOCK_SIGNER_ADDRESS: '0x00000398232E2064F896018496b4b44b3D62751F'
+GAS_PRICE_ORACLE_OVERHEAD: 2750
+GAS_PRICE_ORACLE_SCALAR: 1500000
+GAS_PRICE_ORACLE_L1_BASE_FEE: 1
+GAS_PRICE_ORACLE_GAS_PRICE: 1
+GAS_PRICE_ORACLE_DECIMALS: 6
+ports:
+# expose the service to the host for getting the contract addrs
+- ${DEPLOYER_PORT:-8080}:8081
+```
 
 
 The deployment.sh will run the hardhat with the following args:
