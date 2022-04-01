@@ -27,21 +27,27 @@ The diagram below is an example of a development deployment. The production shou
 
 The ovmSequencerAddress is 0x70997970c51812dc3a010c7d01b50e0d17dc79c8 , and is inputed in the deployemnt time, so in step 10, it will be injected in the AddressDictator.
 ```
-- it sends to bridge contract and fund the sequencer wallet in L2
+## it sends to bridge contract 0x610178da211fef7d417bc0e6fed39f05609ad788 and fund the sequencer wallet in L2
 
+## first add it to addressdictator
 541 - deployer_1           | OVM_SEQUENCER_ADDRESS set to 0x70997970c51812dc3a010c7d01b50e0d17dc79c8, applying --ovm-sequencer-address argument.
 
+## hey, it's a rich wallet on L1
 561 l1_chain_1           | Account #1: 0x70997970c51812dc3a010c7d01b50e0d17dc79c8 (10000 ETH)
 
+## finally deployed
 567 deployer_1           | npx hardhat deploy --network "custom" --ovm-address-manager-owner "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266" --ovm-proposer-address "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc" --ovm-sequencer-address "0x70997970c51812dc3a010c7d01b50e0d17dc79c8" --scc-fraud-proof-window "0" --num-deploy-confirmations "0"
 
 1661deployer_1           |         OVM_Sequencer                             0x70997970C51812dc3A010C7d01b50e0d17dc79C8
 
+## transfer funds to the same address on L2, sending to bridge
 l1_chain_1           |   From:                0x70997970c51812dc3a010c7d01b50e0d17dc79c8
 l1_chain_1           |   To:                  0x610178da211fef7d417bc0e6fed39f05609ad788
 
+## and getting the transfer on L2
 deployer_1           | ✓ Funded 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 on L2 with 5000.0 ETH
 
+## now batch-submitter paid attention
 batch_submitter_1    | INFO [03-22|16:42:52.620] Sequencer wallet params parsed successfully wallet_address=0x70997970C51812dc3A010C7d01b50e0d17dc79C8 contract_address=0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
 batch_submitter_1    | INFO [03-22|16:42:52.620] Proposer wallet params parsed successfully wallet_address=0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC contract_address=0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
 ```
@@ -137,6 +143,7 @@ See the [contracts](https://github.com/ethereum-optimism/optimism/tree/develop/p
 ## Data Transport Layer
 
 The Optimism Data Transport Layer is a long-running software service (written in TypeScript) designed to reliably index Optimism transaction data from Layer 1 (Ethereum). Specifically, this service indexes:
+It's an event indexer, allowing the l2geth node to access L1 data
 
 * Transactions that have been enqueued for submission to the CanonicalTransactionChain via [`CanonicalTransactionChain.enqueue`].
 * Transactions that have been included in the CanonicalTransactionChain via [`CanonicalTransactionChain.appendQueueBatch`] or [`CanonicalTransactionChain.appendSequencerBatch`].
@@ -632,7 +639,8 @@ RETRIES: 60
 
 ## Batch Submitter
 
-Service for submitting batches of transactions and results to L1, that synchronize L2 state to L1 contracts.
+It's a daemon for submitting L2 transaction and state root batches to L1,
+that synchronize L2 state to L1 contracts.
 
 * [source-code](https://github.com/ethereum-optimism/optimism/tree/develop/go/batch-submitter)
 
